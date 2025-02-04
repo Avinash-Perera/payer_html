@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Notification</title>
+</head>
+<body>
+    <h2>Processing Payment...</h2>
+
+    <script>
+        // Function to parse PayHere POST parameters from URL (if using GET for testing)
+        function getQueryParams() {
+            let params = new URLSearchParams(window.location.search);
+            let data = {};
+            for (let [key, value] of params) {
+                data[key] = value;
+            }
+            return data;
+        }
+
+        // Function to save data to a JSON file
+        function saveToFile(data) {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "payment_data.json";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // Main function to handle payment notification
+        function handlePaymentNotification() {
+            let paymentData = getQueryParams();
+
+            if (Object.keys(paymentData).length > 0) {
+                console.log("Payment Data Received:", paymentData);
+
+                // Display success message
+                document.body.innerHTML = "<h2>Payment Processed Successfully!</h2><p>Check console for details.</p>";
+
+                // Save data to a JSON file
+                saveToFile(paymentData);
+            } else {
+                document.body.innerHTML = "<h2>No Payment Data Received</h2>";
+            }
+        }
+
+        // Run the function when the page loads
+        handlePaymentNotification();
+    </script>
+</body>
+</html>
